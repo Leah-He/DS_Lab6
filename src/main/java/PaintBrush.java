@@ -27,6 +27,7 @@ set the "paint" for the paintbrush
 */	
 	public void setPaint(Paint paint)
 	{
+		this.paint = paint;
    
    
 	}
@@ -37,7 +38,8 @@ set the "paint" for the paintbrush
 */
 	public Paint getPaint()
 	{
-		return Gold;
+		return this.paint;
+		//return Gold;
 	}
 	
    
@@ -45,7 +47,10 @@ set the "paint" for the paintbrush
    makes the paint on the paint brush a brigter shade.
    */
 	public void setBrighter()
-	{		
+	{
+		if (this.paint != null) {
+            this.paint = new PaintBrighter(this.paint);  // Wrap current paint in PaintBrighter
+        }
 
 	}
 
@@ -55,7 +60,9 @@ set the "paint" for the paintbrush
    */
 	public void setDarker()
 	{
-		
+		if (this.paint != null) {
+			this.paint = new PaintDarker(this.paint);  // Make the current paint darker
+		}
 	}
 
 
@@ -64,10 +71,79 @@ set the "paint" for the paintbrush
    */
 	public void paint(int x, int y, Paint[][] mesh)
 	{
+		switch (mode) {
+		case paintMode:
+			mesh[x][y] = this.paint;
+			break;
+		case fillMode:
+			fillPaint(x,y,mesh, mesh[x][y]);
+			break;
+		case pattern1Mode:
+			pattern1Paint(x, y, mesh, mesh[x][y]);
+			break;
+		case pattern2Mode:
+			pattern2Paint(x, y, mesh, mesh[x][y]);//maybe do something in the future
+			break;
+		default:
+			break;
+		/*//mesh[x][y] = this.paint;
+		if (x < 0 || x >= mesh.length || y < 0 || y >= mesh[0].length) {
+			return;
+		}
 		
+		if (mode == BrushMode.paintMode) {
+			mesh[x][y] = this.paint;
+		//} else if (mode == BrushMode.fillMode) {
+			//fillPaint(x,y,mesh,mesh[x][y], this.paint);
+		//} else if (mode == BrushMode.fillMode) {
+		*/
+		
+		}
 	}
 
+	private void fillPaint(int x, int y, Paint[][] mesh, Paint ogPaint)
+	{
+		if (x < 0 || x >= mesh.length || y < 0 || y >= mesh[0].length) {
+			return;
+		}
+		if (!mesh[x][y].equals(ogPaint)) {
+			return;
+		}
+		
+		mesh[x][y] = this.paint;
+		
+		fillPaint(x+1, y, mesh, ogPaint);
+		fillPaint(x-1, y, mesh, ogPaint);
+		fillPaint(x, y+1, mesh, ogPaint);
+		fillPaint(x, y-1, mesh, ogPaint);
+		
+		
+	}
 	
+	private void pattern1Paint(int x, int y, Paint[][] mesh, Paint ogPaint)
+	{
+		if (x < 0 || x >= mesh.length || y < 0 || y >= mesh[0].length) {
+			return;
+		}
+		if (!mesh[x][y].equals(ogPaint)) {
+			return;
+		}
+		if (x % 2 == 0) {//even
+			mesh[x][y] = White;
+		} else {//odd
+			mesh[x][y] = Gold;
+		}
+		
+		pattern1Paint(x-1, y, mesh, ogPaint);
+		pattern1Paint(x+1, y, mesh, ogPaint);
+		pattern1Paint(x, y-1, mesh, ogPaint);
+		pattern1Paint(x, y+1, mesh, ogPaint);
+	}
+	
+	private void pattern2Paint(int x, int y, Paint[][] mesh, Paint ogPaint)
+	{
+		//we can do something in the future
+	}
 	
 /*
    set the drawing mode of the paint brush.
@@ -93,3 +169,4 @@ set the "paint" for the paintbrush
 	}
 
 }
+ 
