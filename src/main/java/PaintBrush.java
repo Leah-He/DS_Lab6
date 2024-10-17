@@ -48,8 +48,8 @@ set the "paint" for the paintbrush
    */
 	public void setBrighter()
 	{
-		if (this.paint != null) {
-            this.paint = new PaintBrighter(this.paint);  // Wrap current paint in PaintBrighter
+		if (this.paint != null) { //maybe check if there is current color first will be better
+            this.paint = new PaintBrighter(this.paint);  // make the current paint brighter
         }
 
 	}
@@ -71,6 +71,11 @@ set the "paint" for the paintbrush
    */
 	public void paint(int x, int y, Paint[][] mesh)
 	{
+		//if use switch, 
+		//use break after that, or it will continue to do the other things after.
+		//But in the future, 
+		//maybe should try to avoid to use the switch 
+		//cuz it may lead other problem.
 		switch (mode) {
 		case paintMode:
 			mesh[x][y] = this.paint;
@@ -86,11 +91,11 @@ set the "paint" for the paintbrush
 			break;
 		default:
 			break;
+			
 		/*//mesh[x][y] = this.paint;
 		if (x < 0 || x >= mesh.length || y < 0 || y >= mesh[0].length) {
 			return;
 		}
-		
 		if (mode == BrushMode.paintMode) {
 			mesh[x][y] = this.paint;
 		//} else if (mode == BrushMode.fillMode) {
@@ -106,18 +111,19 @@ set the "paint" for the paintbrush
 		if (x < 0 || x >= mesh.length || y < 0 || y >= mesh[0].length) {
 			return;
 		}
-		if (!mesh[x][y].equals(ogPaint)) {
+		//if (!mesh[x][y].equals(ogPaint)) {
+		//return;
+		//document version
+		if (mesh[x][y].equals(ogPaint)) {
+			mesh[x][y] = this.paint;
+		} else {
 			return;
 		}
-		
-		mesh[x][y] = this.paint;
 		
 		fillPaint(x+1, y, mesh, ogPaint);
 		fillPaint(x-1, y, mesh, ogPaint);
 		fillPaint(x, y+1, mesh, ogPaint);
-		fillPaint(x, y-1, mesh, ogPaint);
-		
-		
+		fillPaint(x, y-1, mesh, ogPaint);				
 	}
 	
 	private void pattern1Paint(int x, int y, Paint[][] mesh, Paint ogPaint)
